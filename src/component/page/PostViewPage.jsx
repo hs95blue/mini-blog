@@ -56,9 +56,7 @@ function PostViewPage(props) {
     const post = data.find(p => p.id === Number(postId)); // data 배열 내의 주소값을 가져옴
     const [comment, setComment] = useState('');
     const [ render, setRender ] = useState('');
-    const handleUpdatePost = () => {
-            navigate(`/post-form/${postId}`);
-    };
+    
     const handleDeletePost = () => {
         deleteComment(postId, () => {
             navigate('/');
@@ -92,7 +90,7 @@ function PostViewPage(props) {
                 <div>
                 <Button
                     title='수정'
-                    onClick={handleUpdatePost}
+                    onClick={()=>{navigate(`/post-form/${postId}`);}}
                 />
                 <Button
                     title='삭제'
