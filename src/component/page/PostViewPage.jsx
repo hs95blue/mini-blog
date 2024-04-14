@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import CommentList from '../list/CommentList';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
-import { data, addComment, addReply, deleteComment, updateComment } from '../../helper/local_storage_helper.js'
+import { data, addComment, addReply, deleteComment, updateComment, getPost } from '../../helper/local_storage_helper.js'
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -53,30 +53,41 @@ justify-content:space-between;
 function PostViewPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
-    const post = data.find(p => p.id === Number(postId)); // data 배열 내의 주소값을 가져옴
+    const [post, setPost] = useState({});
     const [comment, setComment] = useState('');
-    const [ render, setRender ] = useState('');
+    const [render, setRender] = useState('');
     
+
+    useEffect(()=>{
+        getPost(postId).then((response)=>{
+            setPost(response)
+        })
+    },[])
+
     const handleDeletePost = () => {
         deleteComment(postId, () => {
             navigate('/');
         });
     };
+
     const handleUpdateComment = (commentId, newContent) => {
         updateComment(post, commentId, newContent, () => {
             setComment('')
         });
     };
+
     const handleDeleteComment = (commentId) => {
         deleteComment(post, commentId, () => {
             setRender(!render)
         });
     };
+
     const handleAddComment = () =>{
         addComment(post, comment, ()=>{
             setComment('')
         } )
     }
+
     return (
         <Wrapper>
             <Container>

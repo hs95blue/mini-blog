@@ -1,6 +1,9 @@
 export const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
 
 
+
+
+
 // post ID 구하기
 const getNextPostId = data => data.reduce((max, post) => Math.max(max, post.id), 0) + 1;
 
@@ -19,6 +22,18 @@ const getNextReplyId = data => {
         return Math.max(maxPost, maxReplyInPost);
     }, 0) + 1;
 };
+
+export const getPosts = () =>{
+    const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
+    return data
+}
+
+export const getPost = (postId) =>{
+    const post = data.find(p => p.id === Number(postId));
+    return post
+}
+
+
 
 
 // 로컬스토리지에 저장
@@ -91,6 +106,7 @@ export const updateReply = (comment, replyId, newContent, callback) => {
         callback()
     }
 };
+
 export const deletePost = (postId, callback) => {
   const index = data.findIndex(post => post.id === Number(postId));
   if (index !== -1) {
@@ -98,7 +114,6 @@ export const deletePost = (postId, callback) => {
     localStorage.setItem('posts', JSON.stringify(data));
     callback(); // 콜백 함수 호출로 UI 반응 처리
     }
- 
 };
 
 export const deleteComment = (post, commentId, callback) => {

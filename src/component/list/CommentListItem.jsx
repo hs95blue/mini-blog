@@ -71,9 +71,8 @@ function CommentListItem(props) {
     const [ reply, setReply ] = useState('');
     const [ render, setRender ] = useState('');
     const [edit, setEdit] = useState(false)
-    const [content, setContent] = useState('')
+    const [content, setContent] = useState(comment.content)
    
-
     
     const handleUpdateComment = ()=>{
         onUpdateComment(comment.id, content)
@@ -109,7 +108,6 @@ function CommentListItem(props) {
                     width={100}
                     height={40} 
                     value={content}  
-                    defaultValue={comment.content} 
                     onChange={(event) => {
                         setContent(event.target.value);
                     }} />

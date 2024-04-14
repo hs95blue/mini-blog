@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PostList from '../list/PostList';
 import Button from '../ui/Button';
-
+import { getPosts } from '../../helper/local_storage_helper';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -24,7 +24,12 @@ const Container = styled.div`
 
 function MainPage(props) {
     const navigate = useNavigate();
-    const data = JSON.parse(localStorage.getItem('posts'))
+    const [data,setData] = useState([])
+    
+    useEffect(()=>{
+        setData(getPosts())
+    },[])
+
     return (
         <Wrapper>
             <Container>
