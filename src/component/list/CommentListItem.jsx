@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Container } from '../../styles/styles';
-import ReplyTextInput from '../ui/ReplyTextInput';
 import ReplyList from './ReplyList';
 import { addReply, deleteReply, updateReply } from '../../helper/local_storage_helper';
 import TextInput from '../ui/TextInput';
