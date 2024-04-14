@@ -1,30 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
 import CommentListItem from './CommentListItem';
+import ReplyListItem from './ReplyListItem';
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-
+    width:100%;
     :not(:last-child) {
         margin-bottom: 16px;
     }
 `;
 
-function CommentList(props) {
-    const { comments, onUpdateComment, onDeleteComment } = props;
-
+function ReplyList(props) { 
+    const { comment, onUpdateReply, onDeleteReply } = props;
+    const replies = comment.replies
     return (
         <Wrapper>
-            {comments && comments.map((comment, index) => {
+            {replies && replies.map((reply, index) => {
                 return (
-                    <CommentListItem
-                        key={comment.id}
+                    <ReplyListItem
+                        key={reply.id}
+                        reply={reply}
                         comment={comment}
-                        onUpdateComment={onUpdateComment}
-                        onDeleteComment={onDeleteComment}
+                        onUpdateReply={onUpdateReply} 
+                        onDeleteReply={onDeleteReply} 
                     />
                 );
             })}
@@ -32,4 +34,4 @@ function CommentList(props) {
     );
 }
 
-export default CommentList;
+export default ReplyList;
