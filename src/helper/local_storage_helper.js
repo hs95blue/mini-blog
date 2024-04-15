@@ -34,10 +34,9 @@ export const getPost = (postId) =>{
 }
 
 
-
-
 // 로컬스토리지에 저장
-export const addPost = (title, content, callback) => {
+export const addPost = (title, content) => {
+    console.log(title)
     const newPostId = getNextPostId(data); // 새 글 ID 생성
     const newPost = {
         id: newPostId,
@@ -50,10 +49,9 @@ export const addPost = (title, content, callback) => {
     localStorage.setItem('posts', JSON.stringify(data));
     alert('글 작성이 완료되었습니다!')
     // 다 끝난 후 화면이동
-    callback()
 };
 
-export const addComment = (post, comment, callback) => {
+export const addComment = (post, comment) => {
     const newCommentId = getNextCommentId(data); // 새 댓글 ID 생성
     const newComment = {
         id: newCommentId,
@@ -62,10 +60,9 @@ export const addComment = (post, comment, callback) => {
     };
     post.comments.push(newComment); // 주소값을 가져온거라 data배열 자체가 업데이트됨.
     localStorage.setItem('posts', JSON.stringify(data));
-    callback()
 };
 
-export const addReply = (comment, replyContent, callback) => {
+export const addReply = (comment, replyContent) => {
 
     const newReplyId = getNextReplyId(data); // 대댓글에도 고유 ID 생성
     const newReply = {
@@ -78,60 +75,55 @@ export const addReply = (comment, replyContent, callback) => {
 
     // 변경된 data를 LocalStorage에 저장
     localStorage.setItem('posts', JSON.stringify(data));
-    callback()
 };
-export const updatePost = (postId, newTitle, newContent, callback) => {
+export const updatePost = (postId, newTitle, newContent) => {
     const post = data.find(post => post.id === Number(postId));
     if (post) {
         post.title = newTitle;
         post.content = newContent;
         localStorage.setItem('posts', JSON.stringify(data));
-        callback(); // 변경 사항을 저장 후 콜백 호출
     }
 };
-export const updateComment = (post, commentId, newContent, callback) => {
+export const updateComment = (postId, commentId, newContent) => {
+  const post = getPost(postId)
   const comment = post.comments.find(c => c.id === Number(commentId));
   if (comment) {
       comment.content = newContent;
       localStorage.setItem('posts', JSON.stringify(data));
   }
-  callback()
 };
 
-export const updateReply = (comment, replyId, newContent, callback) => {
+export const updateReply = (comment, replyId, newContent) => {
   const reply = comment.replies.find(r => r.id === Number(replyId));
     if (reply) {
         reply.content = newContent;
         localStorage.setItem('posts', JSON.stringify(data));
-        callback()
     }
 };
 
-export const deletePost = (postId, callback) => {
+export const deletePost = (postId) => {
   const index = data.findIndex(post => post.id === Number(postId));
   if (index !== -1) {
     data.splice(index, 1); // 삭제
     localStorage.setItem('posts', JSON.stringify(data));
-    callback(); // 콜백 함수 호출로 UI 반응 처리
     }
 };
 
-export const deleteComment = (post, commentId, callback) => {
+export const deleteComment = (postId, commentId) => {
+    const post = getPost(postId)
     const index = post.comments.findIndex(comment => comment.id === Number(commentId));
     if (index !== -1) {
         post.comments.splice(index, 1); // 삭제
         localStorage.setItem('posts', JSON.stringify(data));
-        callback()
       }
 
 };
 
-export const deleteReply = (comment, replyId, callback) => {
+export const deleteReply = (comment, replyId) => {
     const index = comment.replies.findIndex(reply => reply.id === Number(replyId));
     if (index !== -1) {
         comment.replies.splice(index, 1); // 삭제
         localStorage.setItem('posts', JSON.stringify(data));
-        callback()
       }
      
 };

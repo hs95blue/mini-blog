@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PostList from '../list/PostList';
 import Button from '../ui/Button';
 import { getPosts } from '../../helper/local_storage_helper';
+import { get } from '../../helper/api_helper';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -25,11 +26,12 @@ const Container = styled.div`
 function MainPage(props) {
     const navigate = useNavigate();
     const [data,setData] = useState([])
-    
-    useEffect(()=>{
-        setData(getPosts())
-    },[])
 
+    useEffect(()=>{
+        get(`/api/posts`).then(response => {
+            setData(response.data)
+        })
+    },[])
     return (
         <Wrapper>
             <Container>

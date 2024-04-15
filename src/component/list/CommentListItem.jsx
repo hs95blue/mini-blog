@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ReplyList from './ReplyList';
 import { addReply, deleteReply, updateReply } from '../../helper/local_storage_helper';
 import TextInput from '../ui/TextInput';
+import { del, post, put } from '../../helper/api_helper';
 const Wrapper = styled.div`
     width: 100%;
     display: flex;
@@ -84,21 +85,21 @@ function CommentListItem(props) {
     
 
     const handleUpdateReply = (replyId, newContent) => {
-        updateReply(comment, replyId, newContent, () => {
+        put(`/api/reply/${replyId}`,{comment:comment, reply:newContent}).then(()=>{
             setReply('')
-        });
+        })
     };
 
     const handleDeleteReply = (replyId) => {
-        deleteReply(comment, replyId, () => {
+        del(`/api/reply/${replyId}`, comment).then(()=>{
             setRender(!render)
-        });
+        })
     };
     const handleAddReply = () =>{
-        addReply(comment, reply, ()=>{
+        post(`/api/reply`,{comment:comment, reply:reply}).then(()=>{
             setReply('')
             setReplyFlag(false)
-        } )
+        })
     }
     return (
         <Wrapper>

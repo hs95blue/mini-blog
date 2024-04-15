@@ -5,6 +5,7 @@ import CommentList from '../list/CommentList';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
 import { data, addComment, addReply, deleteComment, updateComment, getPost } from '../../helper/local_storage_helper.js'
+import { del, get, post, put } from '../../helper/api_helper.js';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -53,39 +54,46 @@ justify-content:space-between;
 function PostViewPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
-    const [post, setPost] = useState({});
+    const [postData, setPostData] = useState({});
     const [comment, setComment] = useState('');
     const [render, setRender] = useState('');
     
 
     useEffect(()=>{
-        getPost(postId).then((response)=>{
-            setPost(response)
+        get(`/api/post/${postId}`).then((response)=>{
+            setPostData(response.data)
         })
     },[])
 
     const handleDeletePost = () => {
-        deleteComment(postId, () => {
-            navigate('/');
-        });
+        del(`/api/post/${postId}`).then(response => {
+            if(response.status === 200){ 
+                // 그냥 status를 넣었으니까 써봤는데,,, 실무에서는 어떻게 하는지?(이미 resolve된거라,.,)
+                // 백엔드에서도 에러가 나거나 예외가 발생했을때 어떤 코드를 주는지 궁금함.
+                // 회사에서는 단순히 000, 001 이런 의미 없는 코드를 응답해서 예외를 처리하고 있음.
+                alert('포스트가 삭제되었습니다!')
+                navigate('/');
+            }
+        })
     };
 
     const handleUpdateComment = (commentId, newContent) => {
-        updateComment(post, commentId, newContent, () => {
+        put(`/api/comment/${commentId}?postId=${postId}`, newContent).then(response =>{
             setComment('')
-        });
+        })
     };
 
     const handleDeleteComment = (commentId) => {
-        deleteComment(post, commentId, () => {
+        del(`/api/comment/${commentId}?postId=${postId}`).then(response =>{
             setRender(!render)
-        });
+        })
     };
 
     const handleAddComment = () =>{
-        addComment(post, comment, ()=>{
+        post(`/api/comment`, {postData:postData,comment:comment}).then(response => {
             setComment('')
-        } )
+        })
+       
     }
 
     return (
@@ -111,12 +119,12 @@ function PostViewPage(props) {
              
                 </ButtonDiv>
                 <PostContainer>
-                    <TitleText>{post.title}</TitleText>
-                    <ContentText>{post.content}</ContentText>
+                    <TitleText>{postData.title}</TitleText>
+                    <ContentText>{postData.content}</ContentText>
                 </PostContainer>
 
                 <CommentLabel>댓글</CommentLabel>
-                <CommentList comments={post.comments} onUpdateComment={handleUpdateComment} onDeleteComment={handleDeleteComment} />
+                <CommentList comments={postData.comments} onUpdateComment={handleUpdateComment} onDeleteComment={handleDeleteComment} />
                 
                 <TextInput
                     width={32}

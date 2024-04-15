@@ -6,6 +6,7 @@ import Button from '../ui/Button';
 import { Container } from '../../styles/styles';
 import { addPost, updatePost } from  '../../helper/local_storage_helper'
 import { data } from '../../helper/local_storage_helper';
+import { post, put } from '../../helper/api_helper';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -20,18 +21,18 @@ const Wrapper = styled.div`
 function PostFormPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
-    const post = postId && data.find(p => p.id === Number(postId)); // data 배열 내의 주소값을 가져옴
-    const [title, setTitle] = useState(postId?post.title:'');
-    const [content, setContent] = useState(postId?post.content:'');
+    const postData = postId && data.find(p => p.id === Number(postId)); // data 배열 내의 주소값을 가져옴
+    const [title, setTitle] = useState(postId?postData.title:'');
+    const [content, setContent] = useState(postId?postData.content:'');
     const handleAddPost = () => {
-        addPost(title, content, () => {
-            navigate('/');  // 데이터 저장 후 메인 페이지로 이동
-        });
+        post(`/api/post`,{title:title,content:content}).then(() =>{
+            navigate('/');
+        })
     };
     const handleUpdatePost = () => {
-        updatePost(postId, title, content, () => {
-            navigate('/');  // 데이터 저장 후 메인 페이지로 이동
-        });
+        postId && put(`/api/post/${postId}`,{title:title,content:content}).then(response =>{
+            navigate('/');  
+        })
     };
 
     return (
