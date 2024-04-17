@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PostList from '../list/PostList';
 import Button from '../ui/Button';
-import { getPosts } from '../../helper/local_storage_helper';
-import { get } from '../../helper/api_helper';
+import { getPosts } from '../../helper/fakebackend_helper';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -28,7 +27,8 @@ function MainPage(props) {
     const [data,setData] = useState([])
 
     useEffect(()=>{
-        get(`/api/posts`).then(response => {
+        getPosts().then(response => {
+            console.log(response)
             setData(response.data)
         })
     },[])
@@ -42,12 +42,12 @@ function MainPage(props) {
                     }}
                 />
 
-                <PostList
+               {data && data.length > 0 && <PostList
                     posts={data}
                     onClickItem={(item) => {
                         navigate(`/post/${item.id}`);
                     }}
-                />
+                />}
             </Container>
         </Wrapper>
     );

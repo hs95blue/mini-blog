@@ -6,6 +6,7 @@ import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
 import { data, addComment, addReply, deleteComment, updateComment, getPost } from '../../helper/local_storage_helper.js'
 import { del, get, post, put } from '../../helper/api_helper.js';
+import { delPost } from '../../helper/fakebackend_helper.js';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -60,13 +61,13 @@ function PostViewPage(props) {
     
 
     useEffect(()=>{
-        get(`/api/post/${postId}`).then((response)=>{
+        getPost(postId).then((response)=>{
             setPostData(response.data)
         })
     },[])
 
     const handleDeletePost = () => {
-        del(`/api/post/${postId}`).then(response => {
+        delPost(postId).then(response => {
             if(response.status === 200){ 
                 // 그냥 status를 넣었으니까 써봤는데,,, 실무에서는 어떻게 하는지?(이미 resolve된거라,.,)
                 // 백엔드에서도 에러가 나거나 예외가 발생했을때 어떤 코드를 주는지 궁금함.

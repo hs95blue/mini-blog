@@ -9,6 +9,7 @@ import styled from "styled-components";
 import MainPage from './component/page/MainPage';
 import PostFormPage from './component/page/PostFormPage';
 import PostViewPage from './component/page/PostViewPage';
+import fakeBackend from "./helper/fakeBackend";
 
 const MainTitleText = styled.p`
     font-size: 24px;
@@ -17,6 +18,7 @@ const MainTitleText = styled.p`
 `;
 
 function App(props) {
+    fakeBackend()
     return (
         <BrowserRouter>
             <MainTitleText>현식의 미니 블로그</MainTitleText>

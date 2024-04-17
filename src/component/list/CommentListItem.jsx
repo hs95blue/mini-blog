@@ -4,6 +4,7 @@ import ReplyList from './ReplyList';
 import { addReply, deleteReply, updateReply } from '../../helper/local_storage_helper';
 import TextInput from '../ui/TextInput';
 import { del, post, put } from '../../helper/api_helper';
+import { delReply, postReply, putReply } from "../../helper/fakebackend_helper";
 const Wrapper = styled.div`
     width: 100%;
     display: flex;
@@ -85,18 +86,18 @@ function CommentListItem(props) {
     
 
     const handleUpdateReply = (replyId, newContent) => {
-        put(`/api/reply/${replyId}`,{comment:comment, reply:newContent}).then(()=>{
+        putReply(`/api/reply/${replyId}`,{comment:comment, reply:newContent}).then(()=>{
             setReply('')
         })
     };
 
     const handleDeleteReply = (replyId) => {
-        del(`/api/reply/${replyId}`, comment).then(()=>{
+        delReply({comment:comment, replyId:replyId}).then(()=>{
             setRender(!render)
         })
     };
     const handleAddReply = () =>{
-        post(`/api/reply`,{comment:comment, reply:reply}).then(()=>{
+        postReply({comment:comment, reply:reply}).then(()=>{
             setReply('')
             setReplyFlag(false)
         })

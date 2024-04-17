@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
 import { Container } from '../../styles/styles';
-import { addPost, updatePost } from  '../../helper/local_storage_helper'
 import { data } from '../../helper/local_storage_helper';
-import { post, put } from '../../helper/api_helper';
+import { postPost, putPost } from '../../helper/fakebackend_helper';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -25,12 +24,12 @@ function PostFormPage(props) {
     const [title, setTitle] = useState(postId?postData.title:'');
     const [content, setContent] = useState(postId?postData.content:'');
     const handleAddPost = () => {
-        post(`/api/post`,{title:title,content:content}).then(() =>{
+        postPost({title:title,content:content}).then(() =>{
             navigate('/');
         })
     };
     const handleUpdatePost = () => {
-        postId && put(`/api/post/${postId}`,{title:title,content:content}).then(response =>{
+        postId && putPost({postId:postId, title:title,content:content}).then(response =>{
             navigate('/');  
         })
     };

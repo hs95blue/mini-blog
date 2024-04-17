@@ -24,7 +24,9 @@ const getNextReplyId = data => {
 };
 
 export const getPosts = () =>{
+    console.log(111)
     const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
+    console.log(data)
     return data
 }
 
@@ -36,7 +38,6 @@ export const getPost = (postId) =>{
 
 // 로컬스토리지에 저장
 export const addPost = (title, content) => {
-    console.log(title)
     const newPostId = getNextPostId(data); // 새 글 ID 생성
     const newPost = {
         id: newPostId,
