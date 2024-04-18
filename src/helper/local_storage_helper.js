@@ -1,9 +1,5 @@
 export const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
 
-
-
-
-
 // post ID 구하기
 const getNextPostId = data => data.reduce((max, post) => Math.max(max, post.id), 0) + 1;
 
@@ -24,13 +20,12 @@ const getNextReplyId = data => {
 };
 
 export const getPosts = () =>{
-    console.log(111)
     const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
-    console.log(data)
     return data
 }
 
 export const getPost = (postId) =>{
+    console.log([postId])
     const post = data.find(p => p.id === Number(postId));
     return post
 }

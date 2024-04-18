@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import CommentList from '../list/CommentList';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
-import { data, addComment, addReply, deleteComment, updateComment, getPost } from '../../helper/local_storage_helper.js'
 import { del, get, post, put } from '../../helper/api_helper.js';
-import { delPost } from '../../helper/fakebackend_helper.js';
+import { getPost, delPost } from '../../helper/fakebackend_helper.js';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -62,7 +61,7 @@ function PostViewPage(props) {
 
     useEffect(()=>{
         getPost(postId).then((response)=>{
-            setPostData(response.data)
+            setPostData(response)
         })
     },[])
 

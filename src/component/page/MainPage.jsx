@@ -28,8 +28,7 @@ function MainPage(props) {
 
     useEffect(()=>{
         getPosts().then(response => {
-            console.log(response)
-            setData(response.data)
+            setData(response)
         })
     },[])
     return (

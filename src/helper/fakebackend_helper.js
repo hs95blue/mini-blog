@@ -6,10 +6,10 @@ import * as url from "./url_helper"
 export const getPosts = () => get(url.GET_POSTS)
 
 // get Posts
-export const getPost = () => get(url.GET_POST)
+export const getPost = id => get(`${url.GET_POST}/${id}`)
 
 // add Post
-export const postPost = data => post(url.ADD_POST,data)
+export const postPost = data => post(url.ADD_POST, data)
 
 // update Post
 export const putPost = params => put(url.UPDATE_POST, params)

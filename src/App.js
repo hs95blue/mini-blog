@@ -16,9 +16,9 @@ const MainTitleText = styled.p`
     font-weight: bold;
     text-align: center;
 `;
+fakeBackend()
 
 function App(props) {
-    fakeBackend()
     return (
         <BrowserRouter>
             <MainTitleText>현식의 미니 블로그</MainTitleText>
