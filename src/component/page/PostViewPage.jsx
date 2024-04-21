@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import CommentList from '../list/CommentList';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
-import { data, addComment, addReply, deleteComment, updateComment, getPost } from '../../helper/local_storage_helper.js'
-import { del, get, post, put } from '../../helper/api_helper.js';
-import { delPost } from '../../helper/fakebackend_helper.js';
+import { delComment, delPost, getPost, postComment, putComment } from '../../helper/fakebackend_helper.js';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -62,9 +60,9 @@ function PostViewPage(props) {
 
     useEffect(()=>{
         getPost(postId).then((response)=>{
-            setPostData(response.data)
+            setPostData(response)
         })
-    },[])
+    },[render])
 
     const handleDeletePost = () => {
         delPost(postId).then(response => {
@@ -79,20 +77,21 @@ function PostViewPage(props) {
     };
 
     const handleUpdateComment = (commentId, newContent) => {
-        put(`/api/comment/${commentId}?postId=${postId}`, newContent).then(response =>{
+        putComment({commentId:commentId,content:newContent}).then(response =>{
             setComment('')
         })
     };
 
     const handleDeleteComment = (commentId) => {
-        del(`/api/comment/${commentId}?postId=${postId}`).then(response =>{
+        delComment({commentId:commentId,postId,postId}).then(response =>{
             setRender(!render)
         })
     };
 
     const handleAddComment = () =>{
-        post(`/api/comment`, {postData:postData,comment:comment}).then(response => {
+        postComment({postId:postId,comment:comment}).then(response => {
             setComment('')
+            setRender(!render)
         })
        
     }

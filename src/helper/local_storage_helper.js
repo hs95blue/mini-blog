@@ -24,9 +24,7 @@ const getNextReplyId = data => {
 };
 
 export const getPosts = () =>{
-    console.log(111)
-    const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
-    console.log(data)
+    // const data = localStorage.getItem('posts') ? JSON.parse(localStorage.getItem('posts')) : []
     return data
 }
 
@@ -34,6 +32,17 @@ export const getPost = (postId) =>{
     const post = data.find(p => p.id === Number(postId));
     return post
 }
+
+
+const getComment = commentId => data.find((post) => 
+    post.comments.find(comment => comment.id === Number(commentId)))
+
+const getReply = replyId => data.find((post) => 
+    post.comments.find(
+        comment => comment.replies.find(
+            reply => reply.id === replyId
+        )
+))
 
 
 // 로컬스토리지에 저장
@@ -52,28 +61,30 @@ export const addPost = (title, content) => {
     // 다 끝난 후 화면이동
 };
 
-export const addComment = (post, comment) => {
+export const addComment = (postId, comment) => {
     const newCommentId = getNextCommentId(data); // 새 댓글 ID 생성
     const newComment = {
         id: newCommentId,
         content: comment,
         replies: []
     };
+    const post = data.find(p => p.id === Number(postId));
     post.comments.push(newComment); // 주소값을 가져온거라 data배열 자체가 업데이트됨.
     localStorage.setItem('posts', JSON.stringify(data));
 };
 
-export const addReply = (comment, replyContent) => {
-
+export const addReply = (commentId, replyContent) => {
     const newReplyId = getNextReplyId(data); // 대댓글에도 고유 ID 생성
     const newReply = {
         id: newReplyId,
         content: replyContent
     };
-
+    console.log(commentId)
+    console.log(replyContent)
+    const comment = getComment(commentId)
+    console.log(comment)
     // 대댓글을 해당 댓글의 replies 배열에 추가
     comment.replies.push(newReply);
-
     // 변경된 data를 LocalStorage에 저장
     localStorage.setItem('posts', JSON.stringify(data));
 };
@@ -94,7 +105,8 @@ export const updateComment = (postId, commentId, newContent) => {
   }
 };
 
-export const updateReply = (comment, replyId, newContent) => {
+export const updateReply = (commentId, replyId, newContent) => {
+  const comment = getComment(commentId)
   const reply = comment.replies.find(r => r.id === Number(replyId));
     if (reply) {
         reply.content = newContent;
@@ -120,7 +132,8 @@ export const deleteComment = (postId, commentId) => {
 
 };
 
-export const deleteReply = (comment, replyId) => {
+export const deleteReply = (commentId, replyId) => {
+    const comment = getComment(commentId)
     const index = comment.replies.findIndex(reply => reply.id === Number(replyId));
     if (index !== -1) {
         comment.replies.splice(index, 1); // 삭제

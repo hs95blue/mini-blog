@@ -86,18 +86,18 @@ function CommentListItem(props) {
     
 
     const handleUpdateReply = (replyId, newContent) => {
-        putReply(`/api/reply/${replyId}`,{comment:comment, reply:newContent}).then(()=>{
+        updateReply({commentId:comment.id, replyId:replyId, content:newContent}).then(()=>{
             setReply('')
         })
     };
 
     const handleDeleteReply = (replyId) => {
-        delReply({comment:comment, replyId:replyId}).then(()=>{
+        delReply({commentId:comment.id, replyId:replyId}).then(()=>{
             setRender(!render)
         })
     };
     const handleAddReply = () =>{
-        postReply({comment:comment, reply:reply}).then(()=>{
+        postReply({commentId:comment.id, reply:reply}).then(()=>{
             setReply('')
             setReplyFlag(false)
         })

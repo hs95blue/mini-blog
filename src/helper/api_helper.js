@@ -3,7 +3,7 @@ import axios from "axios"
 //apply base url for axios
 const API_URL = ""
 
-const axiosApi = axios.create({
+export const axiosApi = axios.create({
   baseURL: API_URL,
 })
 

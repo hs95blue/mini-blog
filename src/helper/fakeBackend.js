@@ -1,16 +1,15 @@
-import axios from "axios"
 import MockAdapter from "axios-mock-adapter"
 import * as url from "./url_helper"
 import { addComment, addPost, addReply, deleteComment, deletePost, deleteReply, getPost, getPosts, updateComment, updatePost, updateReply } from './local_storage_helper'
+import { axiosApi } from "./api_helper"
 
 
 
 const fakeBackend = () => {
   // This sets the mock adapter on the default instance
-  const mock = new MockAdapter(axios)
+  const mock = new MockAdapter(axiosApi)
 
   mock.onGet('/api/posts').reply(() => {
-    console.log(222)
 
     return new Promise((resolve, reject) => {
       try{
@@ -23,8 +22,9 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onGet(url.GET_POST).reply(id => {
+  mock.onGet(new RegExp(`${url.GET_POST}/?(.*)`)).reply(config => {
     return new Promise((resolve, reject) => {
+      const id = config.url.split('/')[3]
         const data = getPost(id)
         if (data) {
           resolve([200, data])
@@ -37,7 +37,8 @@ const fakeBackend = () => {
   mock.onPost(url.ADD_POST).reply(params => {
     return new Promise((resolve, reject) => {
       try{
-        addPost(params.title, params.content) 
+        const data = JSON.parse(params.data)
+        addPost(data.title, data.content) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -78,10 +79,11 @@ const fakeBackend = () => {
   //   })
   // })
 
-  mock.onPost(url.ADD_COMMENT).reply(params => {
+  mock.onPost(url.ADD_COMMENT).reply( config => {
     return new Promise((resolve, reject) => {
       try{
-        addComment(params.post, params.comment) 
+        const params = JSON.parse(config.data)
+        addComment(params.postId, params.comment) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -123,10 +125,11 @@ const fakeBackend = () => {
   //   })
   // })
 
-  mock.onPost(url.ADD_REPLY).reply(params => {
+  mock.onPost(url.ADD_REPLY).reply(config => {
     return new Promise((resolve, reject) => {
       try{
-        addReply(params.comment, params.content) 
+        const params = JSON.parse(config.data)
+        addReply(params.commentId, params.reply) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -134,9 +137,10 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPut(url.UPDATE_REPLY).reply(params => {
+  mock.onPut(url.UPDATE_REPLY).reply(config => {
     return new Promise((resolve, reject) => {
       try{
+        const params = JSON.parse(config.data)
         updateReply(params.comment, params.replyId, params.content) 
         resolve([200, 'success!'])
       }catch{
@@ -148,7 +152,7 @@ const fakeBackend = () => {
   mock.onDelete(url.DELETE_REPLY).reply(params => {
     return new Promise((resolve, reject) => {
       try{
-        deleteReply(params.comment, params.replyId) 
+        deleteReply(params.commentId, params.replyId) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])

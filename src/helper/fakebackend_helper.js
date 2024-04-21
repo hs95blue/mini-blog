@@ -1,4 +1,3 @@
-import axios from "axios"
 import { post, del, get, put } from "./api_helper"
 import * as url from "./url_helper"
 
@@ -6,7 +5,7 @@ import * as url from "./url_helper"
 export const getPosts = () => get(url.GET_POSTS)
 
 // get Posts
-export const getPost = () => get(url.GET_POST)
+export const getPost =  id => get(`${url.GET_POST}/${id}`)
 
 // add Post
 export const postPost = data => post(url.ADD_POST,data)
