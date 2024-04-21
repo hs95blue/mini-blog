@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import CommentList from '../list/CommentList';
 import TextInput from '../ui/TextInput';
 import Button from '../ui/Button';
-import { del, get, post, put } from '../../helper/api_helper.js';
-import { getPost, delPost } from '../../helper/fakebackend_helper.js';
+import { delComment, delPost, delReply, getPost, postComment, postReply, putComment, putReply } from '../../helper/fakebackend_helper.js';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
@@ -63,38 +62,55 @@ function PostViewPage(props) {
         getPost(postId).then((response)=>{
             setPostData(response)
         })
-    },[])
+    },[render])
 
     const handleDeletePost = () => {
-        delPost(postId).then(response => {
-            if(response.status === 200){ 
-                // 그냥 status를 넣었으니까 써봤는데,,, 실무에서는 어떻게 하는지?(이미 resolve된거라,.,)
-                // 백엔드에서도 에러가 나거나 예외가 발생했을때 어떤 코드를 주는지 궁금함.
-                // 회사에서는 단순히 000, 001 이런 의미 없는 코드를 응답해서 예외를 처리하고 있음.
+    
+        delPost({postId:postId}).then(response => {
                 alert('포스트가 삭제되었습니다!')
                 navigate('/');
-            }
         })
     };
 
     const handleUpdateComment = (commentId, newContent) => {
-        put(`/api/comment/${commentId}?postId=${postId}`, newContent).then(response =>{
-            setComment('')
+        putComment({postId:postId, commentId:commentId,content:newContent}).then(response =>{
+            setRender(!render)
         })
     };
 
     const handleDeleteComment = (commentId) => {
-        del(`/api/comment/${commentId}?postId=${postId}`).then(response =>{
+        delComment({commentId:commentId,postId:postId}).then(response =>{
             setRender(!render)
         })
     };
 
     const handleAddComment = () =>{
-        post(`/api/comment`, {postData:postData,comment:comment}).then(response => {
+        postComment({postId:postId,comment:comment}).then(response => {
+            setRender(!render)
             setComment('')
         })
        
     }
+    
+    const handleAddReply = (commentId, reply) =>{
+        postReply({commentId:commentId, reply:reply}).then((response)=>{
+            setRender(!render)
+        })
+    }
+
+    const handleUpdateReply = (commentId, replyId, newContent) => {
+        putReply({commentId:commentId, replyId:replyId, content:newContent}).then(()=>{
+            setRender(!render)
+        })
+    };
+
+    const handleDeleteReply = (commentId, replyId) => {
+        delReply({commentId:commentId, replyId:replyId}).then(()=>{
+            setRender(!render)
+        })
+    };
+
+    
 
     return (
         <Wrapper>
@@ -124,7 +140,14 @@ function PostViewPage(props) {
                 </PostContainer>
 
                 <CommentLabel>댓글</CommentLabel>
-                <CommentList comments={postData.comments} onUpdateComment={handleUpdateComment} onDeleteComment={handleDeleteComment} />
+                <CommentList comments={postData.comments} 
+                    onAddComment={handleAddComment} 
+                    onUpdateComment={handleUpdateComment} 
+                    onDeleteComment={handleDeleteComment} 
+                    onAddReply={handleAddReply} 
+                    onUpdateReply={handleUpdateReply} 
+                    onDeleteReply={handleDeleteReply}
+                />
                 
                 <TextInput
                     width={32}

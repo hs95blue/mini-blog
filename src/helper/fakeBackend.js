@@ -26,6 +26,7 @@ const fakeBackend = () => {
     return new Promise((resolve, reject) => {
         const id = config.url.split('/')[3]
         const data = getPost(id)
+        console.log(data)
         if (data) {
           resolve([200, data])
         } else {
@@ -34,10 +35,10 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPost(url.ADD_POST).reply(params => {
+  mock.onPost(url.ADD_POST).reply(config => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
+        let data = JSON.parse(config.data)
         addPost(data.title, data.content) 
         resolve([200, 'success!'])
       }catch{
@@ -46,10 +47,10 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPut(url.UPDATE_POST).reply(params => {
+  mock.onPut(url.UPDATE_POST).reply(config => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
+        let data = JSON.parse(config.data)
         updatePost(data.postId, data.title, data.content) 
         resolve([200, 'success!'])
       }catch{
@@ -58,10 +59,10 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onDelete(url.DELETE_POST).reply(postId => {
+  mock.onDelete(url.DELETE_POST).reply(params => {
     return new Promise((resolve, reject) => {
       try{
-        deletePost(postId) 
+        deletePost(params.postId) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -80,11 +81,11 @@ const fakeBackend = () => {
   //   })
   // })
 
-  mock.onPost(url.ADD_COMMENT).reply(params => {
+  mock.onPost(url.ADD_COMMENT).reply( config => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
-        addComment(data.post, data.comment) 
+        const params = JSON.parse(config.data)
+        addComment(params.postId, params.comment) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -92,11 +93,11 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPut(url.UPDATE_COMMENT).reply(params => {
+  mock.onPut(url.UPDATE_COMMENT).reply(config => {
     return new Promise((resolve, reject) => {
-      
       try{
-        let data = JSON.parse(params.data)
+        let data = JSON.parse(config.data)
+
         updateComment(data.postId, data.commentId, data.content) 
         resolve([200, 'success!'])
       }catch{
@@ -105,10 +106,9 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onDelete(url.DELETE_COMMENT).reply(params => {
+  mock.onDelete(url.DELETE_COMMENT).reply(data => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
         deleteComment(data.postId, data.commentId) 
         resolve([200, 'success!'])
       }catch{
@@ -129,11 +129,11 @@ const fakeBackend = () => {
   //   })
   // })
 
-  mock.onPost(url.ADD_REPLY).reply(params => {
+  mock.onPost(url.ADD_REPLY).reply(config => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
-        addReply(data.comment, data.content) 
+        const params = JSON.parse(config.data)
+        addReply(params.commentId, params.reply) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -141,11 +141,11 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPut(url.UPDATE_REPLY).reply(params => {
+  mock.onPut(url.UPDATE_REPLY).reply(config => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
-        updateReply(data.comment, data.replyId, data.content) 
+        const params = JSON.parse(config.data)
+        updateReply(params.commentId, params.replyId, params.content) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])
@@ -156,8 +156,7 @@ const fakeBackend = () => {
   mock.onDelete(url.DELETE_REPLY).reply(params => {
     return new Promise((resolve, reject) => {
       try{
-        let data = JSON.parse(params.data)
-        deleteReply(data.comment, data.replyId) 
+        deleteReply(params.commentId, params.replyId) 
         resolve([200, 'success!'])
       }catch{
         reject([400, "failed.."])

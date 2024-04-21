@@ -1,4 +1,3 @@
-import axios from "axios"
 import { post, del, get, put } from "./api_helper"
 import * as url from "./url_helper"
 
@@ -15,7 +14,7 @@ export const postPost = data => post(url.ADD_POST, data)
 export const putPost = params => put(url.UPDATE_POST, params)
 
 // delete Post
-export const delPost = id => del(url.DELETE_POST, id)
+export const delPost = postId => del(url.DELETE_POST, postId)
 
 // get Comments
 export const getComments = () => get(url.GET_COMMENTS)

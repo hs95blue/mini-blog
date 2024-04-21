@@ -14,8 +14,8 @@ const Wrapper = styled.div`
 `;
 
 function CommentList(props) {
-    const { comments, onUpdateComment, onDeleteComment } = props;
-
+    const { comments, onUpdateComment, onDeleteComment, onAddReply, onUpdateReply, onDeleteReply } = props;
+    
     return (
         <Wrapper>
             {comments && comments.map((comment, index) => {
@@ -23,6 +23,9 @@ function CommentList(props) {
                     <CommentListItem
                         key={comment.id}
                         comment={comment}
+                        onAddReply={onAddReply}
+                        onUpdateReply={onUpdateReply}
+                        onDeleteReply={onDeleteReply}
                         onUpdateComment={onUpdateComment}
                         onDeleteComment={onDeleteComment}
                     />

@@ -68,40 +68,40 @@ width:100%;
 margin-bottom:5px;
 `;
 function CommentListItem(props) {
-    const { comment, onUpdateComment, onDeleteComment } = props;
+    const { comment, onUpdateComment, onDeleteComment, onAddReply, onUpdateReply, onDeleteReply } = props;
     const [ replyFlag, setReplyFlag ] = useState(false);
     const [ reply, setReply ] = useState('');
     const [ render, setRender ] = useState('');
-    const [edit, setEdit] = useState(false)
-    const [content, setContent] = useState(comment.content)
+    const [ edit, setEdit ] = useState(false)
+    const [ content, setContent ] = useState(comment.content)
    
-    
     const handleUpdateComment = ()=>{
         onUpdateComment(comment.id, content)
         setEdit(false)
     }
+
     const handleDeleteComment = ()=>{
         onDeleteComment(comment.id)
     }
-    
+
+    const handleAddReply = () =>{
+        onAddReply(comment.id, reply)
+        setReplyFlag(false)
+        setReply('')
+    }
 
     const handleUpdateReply = (replyId, newContent) => {
-        putReply(`/api/reply/${replyId}`,{comment:comment, reply:newContent}).then(()=>{
-            setReply('')
-        })
+        onUpdateReply(comment.id, replyId, newContent)
+        setEdit(false)
+        setReply('')
     };
 
     const handleDeleteReply = (replyId) => {
-        delReply({comment:comment, replyId:replyId}).then(()=>{
-            setRender(!render)
-        })
+        onDeleteReply(comment.id, replyId)
     };
-    const handleAddReply = () =>{
-        postReply({comment:comment, reply:reply}).then(()=>{
-            setReply('')
-            setReplyFlag(false)
-        })
-    }
+
+   
+
     return (
         <Wrapper>
                 <CommentDiv>
@@ -128,7 +128,10 @@ function CommentListItem(props) {
                 </CommentDiv>
                 <ReplyDiv>
                 {comment.replies && comment.replies.length > 0 &&
-                    <ReplyList comment={comment} onUpdateReply={handleUpdateReply} onDeleteReply={handleDeleteReply} />
+                    <ReplyList comment={comment} 
+                        onUpdateReply={handleUpdateReply} 
+                        onDeleteReply={handleDeleteReply} 
+                    />
                 }
                 {replyFlag && 
                 <>
